@@ -1,5 +1,5 @@
-from isa import NOPU
-from units import alu
+from Isa import NOPU
+from FU import ALU
 
 
 def operand_positions(ins):
@@ -45,4 +45,4 @@ def run(cpu):
             ins.address = int(base) + ins.imm
             cpu.memory.check(ins.address)
         else:
-            ins.result = alu.evaluate(ins)
+            ins.result = ALU.evaluate(ins)

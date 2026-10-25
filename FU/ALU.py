@@ -1,4 +1,4 @@
-from isa import ParseError
+from Isa import ParseError
 
 
 def evaluate(ins):

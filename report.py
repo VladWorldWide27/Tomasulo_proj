@@ -1,6 +1,6 @@
 import sys
 
-from isa import INT, FPA, FPM, LSU, reg_name
+from Isa import INT, FPA, FPM, LSU, reg_name
 
 
 def fmt(v):

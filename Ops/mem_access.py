@@ -1,4 +1,4 @@
-from isa import NOPU
+from Isa import NOPU
 
 
 def blocking_store(cpu, load):

@@ -1,4 +1,4 @@
-from isa import MEM_BYTES, ParseError
+from Isa import MEM_BYTES, ParseError
 
 
 class DataMemory:

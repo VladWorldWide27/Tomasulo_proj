@@ -1,4 +1,4 @@
-from isa import NUM_REGS
+from Isa import NUM_REGS
 
 
 class RegisterFiles:

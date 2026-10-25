@@ -1,4 +1,4 @@
-from units.functional_unit import FunctionalUnit
+from FU.FU import FunctionalUnit
 
 
 class IntegerAdder(FunctionalUnit):
