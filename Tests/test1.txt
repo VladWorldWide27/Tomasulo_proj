@@ -1,0 +1,23 @@
+int_adder:  rs=2, ex=1, fu=1
+fp_adder:   rs=3, ex=3, fu=1
+fp_mult:    rs=2, ex=20, fu=1
+ld_st:      rs=3, ex=1, mem=4, fu=1
+rob=128
+cdb_buffer=1
+
+R1=5, R2=12, R3=13, R4=14, R5=2
+R6=7, R7=25, R8=42, R9=11, R10=4
+F1=6.5, F2=0.3, F3=2.2, F4=7.8, F5=6.7
+F6=1.3, F7=14.9, F8=12.2, F9=0.7, F10=23.8
+Mem[4]=2.5, Mem[8]=4.5, Mem[16]=3.25
+
+Mult   R7,  R2, R3
+Ld     F11, 2(R5)
+Sd     F1,  10(R4)
+Mult.d F6,  F3, F4
+Add    R7,  R2, R4
+Ld     F7,  3(R1)
+Add.d  F8,  F2, F4
+Sub    R8,  R3, R5
+Ld     F9,  4(R2)
+Sub.d  F10, F4, F2

@@ -10,6 +10,7 @@ NOPU = 'nop'
 OP_CLASS = {
     'add': INT, 'addi': INT, 'sub': INT,
     'add.d': FPA, 'sub.d': FPA,
+    'mult': FPM,
     'mult.d': FPM,
     'ld': LSU, 'sd': LSU,
     'nop': NOPU,

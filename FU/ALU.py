@@ -14,6 +14,8 @@ def evaluate(ins):
         return a + b
     if ins.op == 'sub.d':
         return a - b
+    if ins.op == 'mult':
+        return int(a) * int(b)
     if ins.op == 'mult.d':
         return a * b
     raise ParseError('cannot execute %s' % ins.op)

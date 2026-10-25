@@ -34,7 +34,6 @@ def print_status_table(cpu, out=sys.stdout):
 
 
 def opcode(ins):
-    """First token of the instruction text, original capitalisation kept."""
     return ins.text.split()[0]
 
 def print_results(cpu, out=sys.stdout):
