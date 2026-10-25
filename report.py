@@ -18,20 +18,24 @@ def span(a, b):
 
 
 def print_status_table(cpu, out=sys.stdout):
-    width = max([len(i.text) for i in cpu.prog] + [11])
-    header = '%-*s %8s %10s %10s %6s %8s' % (
-        width, 'Instruction', 'ISSUE', 'EX', 'MEM', 'WB', 'COMMIT')
-    print(header, file=out)
-    print('-' * len(header), file=out)
-    for ins in cpu.prog:
-        print('%-*s %8s %10s %10s %6s %8s' % (
-            width, ins.text,
-            ins.issue if ins.issue else '-',
+
+    print('\t'.join(['', 'Inst Number', 'OP', 'I', 'E', 'M', 'W', 'C']), file=out)
+    for row, ins in enumerate(cpu.prog, 1):
+        print('\t'.join([
+            str(row),                                      
+            str(ins.idx + 1),                             
+            opcode(ins),                                   
+            str(ins.issue) if ins.issue else '-',
             span(ins.ex_start, ins.ex_end),
             span(ins.mem_start, ins.mem_end) if ins.op == 'ld' else '-',
-            ins.wb if ins.wb else '-',
-            ins.commit if ins.commit else '-'), file=out)
+            str(ins.wb) if ins.wb else '-',                
+            str(ins.commit) if ins.commit else '-',
+        ]), file=out)
 
+
+def opcode(ins):
+    """First token of the instruction text, original capitalisation kept."""
+    return ins.text.split()[0]
 
 def print_results(cpu, out=sys.stdout):
     print(file=out)
