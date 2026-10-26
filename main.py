@@ -27,7 +27,7 @@ def main(argv=None):
     except ParseError as err:
         print('runtime error: %s' % err)
         return 1
-    report.print_status_table(cpu)
+    report.print_status_table(cpu, tsv='--tsv' in argv)
     report.print_results(cpu)
     return 0
 

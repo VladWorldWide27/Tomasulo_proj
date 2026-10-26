@@ -17,20 +17,31 @@ def span(a, b):
     return str(a) if a == b else '%d-%d' % (a, b)
 
 
-def print_status_table(cpu, out=sys.stdout):
-
-    print('\t'.join(['', 'Inst Number', 'OP', 'I', 'E', 'M', 'W', 'C']), file=out)
+def print_status_table(cpu, out=sys.stdout, tsv=False):
+    head = ['#', 'Inst', 'OP', 'I', 'E', 'M', 'W', 'C']
+    rows = []
     for row, ins in enumerate(cpu.prog, 1):
-        print('\t'.join([
-            str(row),                                      
-            str(ins.idx + 1),                             
-            opcode(ins),                                   
+        rows.append([
+            str(row),
+            str(ins.idx + 1),
+            opcode(ins),
             str(ins.issue) if ins.issue else '-',
             span(ins.ex_start, ins.ex_end),
             span(ins.mem_start, ins.mem_end) if ins.op == 'ld' else '-',
-            str(ins.wb) if ins.wb else '-',                
+            str(ins.wb) if ins.wb else '-',
             str(ins.commit) if ins.commit else '-',
-        ]), file=out)
+        ])
+    if tsv:
+        print('\t'.join(head), file=out)
+        for r in rows:
+            print('\t'.join(r), file=out)
+        return
+    width = [max(len(r[c]) for r in rows + [head]) for c in range(len(head))]
+    line = '  '.join('%-*s' % (width[c], head[c]) for c in range(len(head)))
+    print(line, file=out)
+    print('-' * len(line), file=out)
+    for r in rows:
+        print('  '.join('%-*s' % (width[c], r[c]) for c in range(len(head))), file=out)
 
 
 def opcode(ins):

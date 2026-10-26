@@ -20,9 +20,7 @@ def run(cpu):
         cpu.memory.write(ins.address, ins.vals[0])
         cpu.stations.release(ins)
     else:
-        if ins.op == 'ld':
-            cpu.stations.release(ins)
-        if ins.dest is not None:
+        if ins.dest is not None: 
             cpu.registers.write(ins.dest, entry.value)
     if ins.dest is not None:
         cpu.rat.clear_if_tagged(ins.dest, entry.id)
