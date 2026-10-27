@@ -1,0 +1,18 @@
+int_adder:  rs=2, ex=1, fu=1
+fp_adder:   rs=3, ex=3, fu=1
+fp_mult:    rs=2, ex=20, fu=1
+ld_st:      rs=3, ex=1, mem=4, fu=1
+rob=128
+cdb_buffer=1
+
+Mult.d F5,  F7, F2
+Mult.d F4,  F8, F3
+Mult.d F3,  F9, F6
+Mult.d F8,  F3, F7
+Add.d  F8,  F3, F7
+Sub.d  F11, F8, F2
+Add.d  F12, F11,F11
+Add.d  F13, F6, F14
+Mult.d F7,  F1, F9
+Sub.d  F2,  F11,F4
+Add.d  F5,  F7, F2

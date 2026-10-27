@@ -1,0 +1,17 @@
+int_adder:  rs=2, ex=1, fu=1
+fp_adder:   rs=3, ex=3, fu=1
+fp_mult:    rs=2, ex=20, fu=1
+ld_st:      rs=3, ex=1, mem=4, fu=1
+rob=128
+cdb_buffer=1
+
+Addi   R4,  R0, 80
+Mult.d F7,  F12,F20
+Addi   R8,  R4, 4
+Sd     F7,  4(R4)
+Ld     F8,  0(R8)
+Mult.d F2,  F8, F8
+Ld     F3,  0(R8)
+Sd     F3,  0(R4)
+Add    R4,  R4, R8
+Ld     F6,  -4(R8)
