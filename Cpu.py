@@ -34,6 +34,7 @@ class CPU:
 
     def step(self):
         self.cycle += 1
+        self.stations.tick()
         commit.run(self)
         write_back.run(self)
         mem_access.run(self)

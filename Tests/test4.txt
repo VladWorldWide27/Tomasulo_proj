@@ -8,7 +8,6 @@ cdb_buffer=1
 Mult.d F5,  F7, F2
 Mult.d F4,  F8, F3
 Mult.d F3,  F9, F6
-Mult.d F8,  F3, F7
 Add.d  F8,  F3, F7
 Sub.d  F11, F8, F2
 Add.d  F12, F11,F11
