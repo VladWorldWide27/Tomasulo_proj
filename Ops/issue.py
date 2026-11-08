@@ -13,7 +13,7 @@ def run(cpu):
         return
     ins.issue = cpu.cycle
     ins.rob_id = cpu.rob.allocate(ins)
-    cpu.stations.allocate(ins.cls)
+    cpu.stations.allocate(ins)
     rename_sources(cpu, ins)
     if ins.dest is not None:
         cpu.rat.set(ins.dest, ins.rob_id)

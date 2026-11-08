@@ -1,13 +1,17 @@
 from Isa import NOPU
 
 
-def blocking_store(cpu, load):
-    for other in cpu.prog[:load.idx]:
-        if other.op != 'sd' or other.commit is not None or other.issue is None:
+def check_stores(cpu, load):
+    for store in reversed(cpu.stations.older_stores(load)):
+        if store.address is None:
+            return 'wait', None
+        if store.address != load.address:
             continue
-        if other.address is None or other.address == load.address:
-            return True
-    return False
+        arrived = store.ready_cycle[0]
+        if arrived is None or arrived >= cpu.cycle:
+            return 'wait', None
+        return 'forward', store
+    return 'memory', None
 
 def release_returned_loads(cpu):
     for ins in cpu.prog:
@@ -21,8 +25,14 @@ def run(cpu):
         if ins.op == 'ld' and ins.ex_end is not None and ins.mem_start is None:
             if ins.ex_end >= cpu.cycle:
                 continue
-            if blocking_store(cpu, ins):
+            action, store = check_stores(cpu, ins)
+            if action == 'wait':
                 continue
+            if action == 'forward':
+                ins.mem_start = cpu.cycle
+                ins.mem_end = cpu.cycle
+                ins.result = store.vals[0]
+                return
             if not cpu.memory.available(cpu.cycle):
                 continue
             ins.mem_start = cpu.cycle
