@@ -1,5 +1,5 @@
 from Isa import NOPU
-
+from Core.cdb import MEMORY
 
 def check_stores(cpu, load):
     for store in reversed(cpu.stations.older_stores(load)):
@@ -28,12 +28,22 @@ def run(cpu):
             if action == 'wait':
                 continue
             if action == 'forward':
+                if cpu.cdb_room[MEMORY] == 0:
+                    cpu.cdb_stalls.add((cpu.cycle, MEMORY))
+                    continue
+                cpu.cdb_room[MEMORY] -= 1
                 ins.mem_start = cpu.cycle
                 ins.mem_end = cpu.cycle
                 ins.result = store.vals[0]
+                ins.forwarded = True
                 return
             if not cpu.memory.available(cpu.cycle):
                 continue
+            if cpu.memory.access_cycles == 1:
+                if cpu.cdb_room[MEMORY] == 0:
+                    cpu.cdb_stalls.add((cpu.cycle, MEMORY))
+                    continue
+                cpu.cdb_room[MEMORY] -= 1
             ins.mem_start = cpu.cycle
             ins.mem_end = cpu.memory.begin_access(cpu.cycle)
             ins.result = cpu.memory.read(ins.address)

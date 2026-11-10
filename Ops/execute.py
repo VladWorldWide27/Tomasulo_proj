@@ -1,6 +1,6 @@
 from Isa import NOPU, ParseError
 from FU import ALU
-
+from Core.cdb import cdb_unit
 
 def operand_positions(ins):
     if ins.cls == NOPU:
@@ -38,6 +38,11 @@ def run(cpu):
         unit = cpu.units[ins.cls]
         if not unit.can_accept(cpu.cycle):
             continue
+        if cdb_unit(ins) == ins.cls and unit.ex_cycles == 1:
+            if cpu.cdb_room[ins.cls] == 0:
+                cpu.cdb_stalls.add((cpu.cycle, ins.cls))
+                continue
+            cpu.cdb_room[ins.cls] -= 1
         ins.ex_start = cpu.cycle
         ins.ex_end = unit.accept(cpu.cycle)
         if ins.op in ('ld', 'sd'):

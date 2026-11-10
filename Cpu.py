@@ -37,6 +37,8 @@ class CPU:
         self.mispredicts = []
         self.cycle = 0
         self.stalls = {}
+        self.cdb_room = {}
+        self.cdb_stalls = set()
 
     def step(self):
         self.cycle += 1

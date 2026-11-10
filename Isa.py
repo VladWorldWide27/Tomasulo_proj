@@ -50,6 +50,7 @@ class Instruction:
         self.predicted_next = None
         self.fault = None
         self.flushed = None
+        self.forwarded = False
         self.rs_released = False
         self.seq = None
 

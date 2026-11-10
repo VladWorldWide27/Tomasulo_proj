@@ -1,6 +1,7 @@
 import sys
 
 from Isa import INT, FPA, FPM, LSU, reg_name
+from Core.cdb import cdb_unit, finish_cycle
 
 
 def fmt(v):
@@ -73,12 +74,24 @@ def print_results(cpu, out=sys.stdout):
             'c%d line %d (flushed: %s)' % (
                 cycle, b.idx + 1, ' '.join(str(i.idx + 1) for i in wrong) or 'none')
             for cycle, b, wrong in cpu.mispredicts), file=out)
+    if cpu.cdb_stalls:
+        print('Full CDB buffers: %s' % ', '.join(
+            'c%d %s' % (cycle, unit) for cycle, unit in sorted(cpu.cdb_stalls)), file=out)
 
 
 def print_stat(cpu, out=sys.stdout):
     print('=== cycle %d ===' % cpu.cycle, file=out)
     print('RS in use: ' + ', '.join('%s %d/%d' % ((c,) + cpu.stations.occupancy(c))
                                     for c in (INT, FPA, FPM, LSU)), file=out)
+    waiting = {}
+    for i in cpu.issued:
+        unit = cdb_unit(i)
+        done = finish_cycle(i) if unit else None
+        if unit and i.wb is None and done is not None and done <= cpu.cycle:
+            waiting[unit] = waiting.get(unit, 0) + 1
+    if waiting:
+        print('Waiting for the CDB: ' + ', '.join(
+            '%s %d' % kv for kv in sorted(waiting.items())), file=out)
     for e in cpu.rob.live():
         i = e.ins
         print('  ROB%-3d %-20s dest=%-4s val=%-10s ready=%s' % (
