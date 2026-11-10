@@ -18,6 +18,8 @@ def run(cpu):
     done = finish_cycle(ins)
     if done is None or done >= cpu.cycle:
         return
+    if ins.fault is not None:
+        raise ins.fault
     ins.commit = cpu.cycle
     entry.committed = True
     if ins.op == 'sd':

@@ -12,6 +12,12 @@ class RegisterAliasTable:
         if self.tags.get(reg) == rob_id:
             del self.tags[reg]
 
+    def rebuild(self, live_entries):
+        self.tags = {}
+        for e in live_entries:
+            if e.dest is not None:
+                self.tags[e.dest] = e.id
+
     def entries(self):
         return sorted(self.tags.items())
 

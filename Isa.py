@@ -47,6 +47,8 @@ class Instruction:
         self.ready_cycle = []
         self.address = None
         self.result = None
+        self.predicted_next = None
+        self.fault = None
         self.rs_released = False
         self.seq = None
 

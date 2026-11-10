@@ -1,5 +1,6 @@
 from Isa import INT, FPA, FPM, LSU
 from Core.cdb import CommonDataBus
+from Core.BTB import BranchTargetBuffer
 from Core.RAT import RegisterAliasTable
 from Core.Reservation import ReservationStations
 from Core.Rob import ReorderBuffer
@@ -9,7 +10,7 @@ from FU.IntAdder import IntegerAdder
 from FU.LoadStore import AddressAdder
 from FU.Memory import DataMemory
 from FU.Registers import RegisterFiles
-from Ops import commit, execute, issue, mem_access, write_back
+from Ops import branch, commit, execute, issue, mem_access, write_back
 
 
 class CPU:
@@ -29,14 +30,17 @@ class CPU:
         self.rob = ReorderBuffer(cfg.rob)
         self.rat = RegisterAliasTable()
         self.cdb = CommonDataBus(cfg.cdb_buffer)
+        self.btb = BranchTargetBuffer()
         self.next_issue = 0
-        self.waiting_on_branch = None
+        self.resume_issue_at = 0
+        self.mispredicts = []
         self.cycle = 0
         self.stalls = {}
 
     def step(self):
         self.cycle += 1
         self.stations.tick()
+        branch.run(self)
         commit.run(self)
         write_back.run(self)
         mem_access.run(self)
@@ -44,9 +48,7 @@ class CPU:
         execute.run(self)
 
     def finished(self):
-        return (self.waiting_on_branch is None
-                and self.next_issue >= len(self.prog)
-                and all(i.commit for i in self.issued))
+        return self.next_issue >= len(self.prog) and all(i.commit for i in self.issued)
 
     def run(self, on_cycle=None, limit=100000):
         while self.cycle < limit:

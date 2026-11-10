@@ -1,4 +1,4 @@
-from Isa import NOPU
+from Isa import NOPU, ParseError
 from FU import ALU
 
 
@@ -43,6 +43,9 @@ def run(cpu):
         if ins.op in ('ld', 'sd'):
             base = ins.vals[0 if ins.op == 'ld' else 1]
             ins.address = int(base) + ins.imm
-            cpu.memory.check(ins.address)
+            try:
+                cpu.memory.check(ins.address)
+            except ParseError as err:
+                ins.fault = err
         else:
             ins.result = ALU.evaluate(ins)

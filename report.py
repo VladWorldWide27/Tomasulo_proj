@@ -68,6 +68,11 @@ def print_results(cpu, out=sys.stdout):
     if cpu.stalls:
         print('Issue stalls: %s' % ', '.join(
             'c%d %s' % (c, r) for c, r in sorted(cpu.stalls.items())), file=out)
+    if cpu.mispredicts:
+        print('Mispredicted branches: %s' % ', '.join(
+            'c%d line %d (flushed: %s)' % (
+                cycle, b.idx + 1, ' '.join(str(i.idx + 1) for i in wrong) or 'none')
+            for cycle, b, wrong in cpu.mispredicts), file=out)
 
 
 def print_stat(cpu, out=sys.stdout):

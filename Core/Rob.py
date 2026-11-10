@@ -35,3 +35,6 @@ class ReorderBuffer:
 
     def live(self):
         return [e for e in self.entries[self.head:] if not e.committed]
+
+    def squash_after(self, rob_id):
+        del self.entries[rob_id + 1:]
