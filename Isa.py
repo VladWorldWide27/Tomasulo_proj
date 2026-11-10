@@ -6,6 +6,7 @@ FPA = 'fp_adder'
 FPM = 'fp_mult'
 LSU = 'ld_st'
 NOPU = 'nop'
+BRANCHES = ('beq', 'bne')
 
 OP_CLASS = {
     'add': INT, 'addi': INT, 'sub': INT,
@@ -32,6 +33,7 @@ class Instruction:
         self.srcs = []
         self.imm = 0
         self.base = None
+        self.target = None
         self.issue = None
         self.ex_start = None
         self.ex_end = None
@@ -54,6 +56,7 @@ class Instruction:
         ins.srcs = list(self.srcs)
         ins.imm = self.imm
         ins.base = self.base
+        ins.target = self.target
         ins.seq = seq
         return ins
 

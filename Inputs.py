@@ -1,6 +1,6 @@
 import re
 
-from Isa import Instruction, OP_CLASS, ParseError, parse_reg
+from Isa import BRANCHES, Instruction, OP_CLASS, ParseError, parse_reg
 from config import Config, UNIT_ALIAS
 
 
@@ -59,6 +59,9 @@ def parse_input(path):
             continue
         raw.append(line)
     prog = [build_instruction(i, t) for i, t in enumerate(raw)]
+    for ins in prog:
+        if ins.op in BRANCHES and not 0 <= ins.target <= len(prog):
+            raise ParseError('branch target out of range: %s' % ins.text)
     return cfg, prog, iregs, fregs, mem
 
 
@@ -83,7 +86,12 @@ def build_instruction(idx, text):
             ins.srcs = [parse_reg(m.group(1)), ins.base]
         return ins
     if op in ('beq', 'bne'):
-        raise ParseError('branches are not supported in this build: %s' % text)
+        if len(parts) != 4:
+            raise ParseError('bad branch: %s' % text)
+        ins.srcs = [parse_reg(parts[1]), parse_reg(parts[2])]
+        ins.imm = int(parts[3])
+        ins.target = idx + 1 + ins.imm
+        return ins
     if op == 'addi':
         ins.dest = parse_reg(parts[1])
         ins.srcs = [parse_reg(parts[2])]

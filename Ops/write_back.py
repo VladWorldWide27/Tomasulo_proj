@@ -1,4 +1,4 @@
-from Isa import NOPU
+from Isa import NOPU, BRANCHES
 
 
 def completed(ins, cycle):
@@ -8,8 +8,12 @@ def completed(ins, cycle):
 
 
 def run(cpu):
+    for ins in cpu.issued:
+        if ins.op in BRANCHES and ins.ex_end is not None and ins.ex_end < cpu.cycle:
+            cpu.stations.release(ins)
     requesters = [ins for ins in cpu.issued
-                  if ins.wb is None and ins.op != 'sd' and completed(ins, cpu.cycle)]
+                  if ins.wb is None and ins.op != 'sd' and ins.op not in BRANCHES
+                  and completed(ins, cpu.cycle)]
     winner = cpu.cdb.arbitrate(requesters)
     if winner is None:
         return

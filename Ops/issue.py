@@ -1,7 +1,14 @@
-from Isa import NOPU
+from Isa import NOPU, BRANCHES
 
 
 def run(cpu):
+    branch = cpu.waiting_on_branch
+    if branch is not None:
+        if branch.ex_end is None or branch.ex_end >= cpu.cycle:
+            cpu.stalls[cpu.cycle] = 'waiting on branch'
+            return
+        cpu.next_issue = branch.target if branch.result else branch.idx + 1
+        cpu.waiting_on_branch = None
     if cpu.next_issue >= len(cpu.prog):
         return
     line = cpu.prog[cpu.next_issue]
@@ -19,7 +26,10 @@ def run(cpu):
     rename_sources(cpu, ins)
     if ins.dest is not None:
         cpu.rat.set(ins.dest, ins.rob_id)
-    cpu.next_issue += 1
+    if ins.op in BRANCHES:
+        cpu.waiting_on_branch = ins
+    else:
+        cpu.next_issue += 1
 
 
 def rename_sources(cpu, ins):

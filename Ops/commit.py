@@ -1,4 +1,8 @@
+from Isa import BRANCHES
+
 def finish_cycle(ins):
+    if ins.op in BRANCHES:
+        return ins.ex_end
     if ins.op == 'sd':
         if ins.ex_end is None or ins.ready_cycle[0] is None:
             return None

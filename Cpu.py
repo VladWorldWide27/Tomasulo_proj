@@ -30,6 +30,7 @@ class CPU:
         self.rat = RegisterAliasTable()
         self.cdb = CommonDataBus(cfg.cdb_buffer)
         self.next_issue = 0
+        self.waiting_on_branch = None
         self.cycle = 0
         self.stalls = {}
 
@@ -43,7 +44,9 @@ class CPU:
         execute.run(self)
 
     def finished(self):
-        return self.next_issue >= len(self.prog) and all(i.commit for i in self.issued)
+        return (self.waiting_on_branch is None
+                and self.next_issue >= len(self.prog)
+                and all(i.commit for i in self.issued))
 
     def run(self, on_cycle=None, limit=100000):
         while self.cycle < limit:

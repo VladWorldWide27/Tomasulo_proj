@@ -18,4 +18,8 @@ def evaluate(ins):
         return int(a) * int(b)
     if ins.op == 'mult.d':
         return a * b
+    if ins.op == 'beq':
+        return a == b
+    if ins.op == 'bne':
+        return a != b
     raise ParseError('cannot execute %s' % ins.op)
