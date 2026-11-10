@@ -42,7 +42,11 @@ class ReservationStations:
             if ins.op == 'sd':
                 stores.append(ins)
         return stores
-        
+
+    def tick(self):
+        for cls in self.pending:
+            self.used[cls] -= 1
+        self.pending = []    
 
     def occupancy(self, cls):
         return self.used.get(cls, 0), self.capacity.get(cls, 0)

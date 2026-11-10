@@ -6,7 +6,7 @@ class CommonDataBus:
     def arbitrate(self, requesters):
         if not requesters:
             return None
-        return min(requesters, key=lambda ins: ins.idx)
+        return min(requesters, key=lambda ins: ins.seq)
 
     def grant(self, ins, cycle):
         ins.wb = cycle

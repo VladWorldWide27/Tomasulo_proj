@@ -4,13 +4,15 @@ from Isa import NOPU
 def run(cpu):
     if cpu.next_issue >= len(cpu.prog):
         return
-    ins = cpu.prog[cpu.next_issue]
-    if cpu.stations.full(ins.cls):
-        cpu.stalls[cpu.cycle] = 'RS full (%s)' % ins.cls
+    line = cpu.prog[cpu.next_issue]
+    if cpu.stations.full(line.cls):
+        cpu.stalls[cpu.cycle] = 'RS full (%s)' % line.cls
         return
     if cpu.rob.full():
         cpu.stalls[cpu.cycle] = 'ROB full'
         return
+    ins = line.fresh_copy(len(cpu.issued))
+    cpu.issued.append(ins)
     ins.issue = cpu.cycle
     ins.rob_id = cpu.rob.allocate(ins)
     cpu.stations.allocate(ins)

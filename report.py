@@ -20,7 +20,7 @@ def span(a, b):
 def print_status_table(cpu, out=sys.stdout, tsv=False):
     head = ['#', 'Inst', 'OP', 'I', 'E', 'M', 'W', 'C']
     rows = []
-    for row, ins in enumerate(cpu.prog, 1):
+    for row, ins in enumerate(cpu.issued, 1):
         rows.append([
             str(row),
             str(ins.idx + 1),
@@ -64,7 +64,7 @@ def print_results(cpu, out=sys.stdout):
     for addr, value in cpu.memory.nonzero():
         print('%-10d %s' % (addr, fmt(value)), file=out)
     print(file=out)
-    print('Total cycles: %d' % max(i.commit for i in cpu.prog), file=out)
+    print('Total cycles: %d' % max(i.commit for i in cpu.issued), file=out)
     if cpu.stalls:
         print('Issue stalls: %s' % ', '.join(
             'c%d %s' % (c, r) for c, r in sorted(cpu.stalls.items())), file=out)

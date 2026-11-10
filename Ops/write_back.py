@@ -8,7 +8,7 @@ def completed(ins, cycle):
 
 
 def run(cpu):
-    requesters = [ins for ins in cpu.prog
+    requesters = [ins for ins in cpu.issued
                   if ins.wb is None and ins.op != 'sd' and completed(ins, cpu.cycle)]
     winner = cpu.cdb.arbitrate(requesters)
     if winner is None:
@@ -19,4 +19,4 @@ def run(cpu):
     entry.ready = True
     if winner.op != 'ld':
         cpu.stations.release(winner)
-    cpu.cdb.broadcast(cpu.prog, winner.rob_id, winner.result, cpu.cycle)
+    cpu.cdb.broadcast(cpu.issued, winner.rob_id, winner.result, cpu.cycle)

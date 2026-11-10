@@ -46,6 +46,17 @@ class Instruction:
         self.address = None
         self.result = None
         self.rs_released = False
+        self.seq = None
+
+    def fresh_copy(self, seq):
+        ins = Instruction(self.idx, self.op, self.text)
+        ins.dest = self.dest
+        ins.srcs = list(self.srcs)
+        ins.imm = self.imm
+        ins.base = self.base
+        ins.seq = seq
+        return ins
+
 
 
 class ParseError(Exception):

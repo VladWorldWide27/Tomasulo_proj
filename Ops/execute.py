@@ -23,7 +23,7 @@ def earliest_start(ins):
 
 
 def run(cpu):
-    for ins in cpu.prog:
+    for ins in cpu.issued:
         if ins.issue is None or ins.ex_start is not None or ins.commit is not None:
             continue
         if ins.issue >= cpu.cycle:

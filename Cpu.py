@@ -16,6 +16,7 @@ class CPU:
     def __init__(self, cfg, prog, iregs, fregs, mem):
         self.cfg = cfg
         self.prog = prog
+        self.issued = []
         self.registers = RegisterFiles(iregs, fregs)
         self.memory = DataMemory(mem, cfg.mem_cycles)
         self.units = {
@@ -42,7 +43,7 @@ class CPU:
         execute.run(self)
 
     def finished(self):
-        return self.next_issue >= len(self.prog) and all(i.commit for i in self.prog)
+        return self.next_issue >= len(self.prog) and all(i.commit for i in self.issued)
 
     def run(self, on_cycle=None, limit=100000):
         while self.cycle < limit:
