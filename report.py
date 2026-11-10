@@ -20,7 +20,7 @@ def span(a, b):
 def print_status_table(cpu, out=sys.stdout, tsv=False):
     head = ['#', 'Inst', 'OP', 'I', 'E', 'M', 'W', 'C']
     rows = []
-    for row, ins in enumerate(cpu.issued, 1):
+    for row, ins in enumerate(cpu.history, 1):
         rows.append([
             str(row),
             str(ins.idx + 1),
@@ -29,7 +29,7 @@ def print_status_table(cpu, out=sys.stdout, tsv=False):
             span(ins.ex_start, ins.ex_end),
             span(ins.mem_start, ins.mem_end) if ins.op == 'ld' else '-',
             str(ins.wb) if ins.wb else '-',
-            str(ins.commit) if ins.commit else '-',
+            str(ins.commit) if ins.commit else ('flushed' if ins.flushed else '-'),
         ])
     if tsv:
         print('\t'.join(head), file=out)

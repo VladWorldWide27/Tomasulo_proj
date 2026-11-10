@@ -18,6 +18,7 @@ class CPU:
         self.cfg = cfg
         self.prog = prog
         self.issued = []
+        self.history = []
         self.registers = RegisterFiles(iregs, fregs)
         self.memory = DataMemory(mem, cfg.mem_cycles)
         self.units = {
@@ -44,6 +45,7 @@ class CPU:
         commit.run(self)
         write_back.run(self)
         mem_access.run(self)
+        mem_access.release_returned_loads(self)
         issue.run(self)
         execute.run(self)
 

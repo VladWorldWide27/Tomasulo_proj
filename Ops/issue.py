@@ -16,6 +16,7 @@ def run(cpu):
         return
     ins = line.fresh_copy(len(cpu.issued))
     cpu.issued.append(ins)
+    cpu.history.append(ins)
     ins.issue = cpu.cycle
     ins.rob_id = cpu.rob.allocate(ins)
     cpu.stations.allocate(ins)

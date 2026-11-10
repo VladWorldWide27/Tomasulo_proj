@@ -18,6 +18,7 @@ def squash_after(cpu, branch):
     for ins in wrong:
         cpu.stations.release(ins)
         ins.tags = [None] * len(ins.tags)
+        ins.flushed = cpu.cycle
     cpu.issued = [i for i in cpu.issued if i.seq <= branch.seq]
     cpu.rob.squash_after(branch.rob_id)
     cpu.rat.rebuild(cpu.rob.live())

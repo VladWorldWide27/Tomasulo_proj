@@ -15,12 +15,11 @@ def check_stores(cpu, load):
 
 def release_returned_loads(cpu):
     for ins in cpu.issued:
-        if ins.op == 'ld' and ins.mem_end is not None and ins.mem_end < cpu.cycle:
+        if ins.op == 'ld' and ins.mem_end is not None and ins.mem_end <= cpu.cycle:
             cpu.stations.release(ins)
 
 
 def run(cpu):
-    release_returned_loads(cpu)
     for ins in cpu.issued:
         if ins.op == 'ld' and ins.ex_end is not None and ins.mem_start is None:
             if ins.ex_end >= cpu.cycle:

@@ -6,6 +6,8 @@ class RegisterAliasTable:
         return self.tags.get(reg)
 
     def set(self, reg, rob_id):
+        if reg == ('i', 0):
+            return
         self.tags[reg] = rob_id
 
     def clear_if_tagged(self, reg, rob_id):
@@ -16,7 +18,7 @@ class RegisterAliasTable:
         self.tags = {}
         for e in live_entries:
             if e.dest is not None:
-                self.tags[e.dest] = e.id
+                self.set(e.dest, e.id)
 
     def entries(self):
         return sorted(self.tags.items())
