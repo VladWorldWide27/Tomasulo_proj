@@ -25,6 +25,8 @@ def run(cpu):
     if ins.op == 'sd':
         cpu.memory.write(ins.address, ins.vals[0])
         cpu.stations.release(ins)
+    elif ins.op in BRANCHES:
+        cpu.stations.release(ins)
     else:
         if ins.dest is not None: 
             cpu.registers.write(ins.dest, entry.value)

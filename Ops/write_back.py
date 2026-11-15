@@ -9,9 +9,6 @@ def completed(ins, cycle):
 
 
 def run(cpu):
-    for ins in cpu.issued:
-        if ins.op in BRANCHES and ins.ex_end is not None and ins.ex_end < cpu.cycle:
-            cpu.stations.release(ins)
     requesters = [ins for ins in cpu.issued
                   if ins.wb is None and ins.op != 'sd' and ins.op not in BRANCHES
                   and completed(ins, cpu.cycle)]

@@ -1,4 +1,4 @@
-from Isa import NOPU, ParseError
+from Isa import NOPU, BRANCHES, ParseError
 from FU import ALU
 from Core.cdb import cdb_unit
 
@@ -30,6 +30,10 @@ def run(cpu):
             continue
         start = earliest_start(ins)
         if start is None or cpu.cycle < start:
+            continue
+        if any(b.op in BRANCHES and b.seq < ins.seq
+               and (b.ex_end is None or b.ex_end >= cpu.cycle)
+               for b in cpu.issued):
             continue
         if ins.cls == NOPU:
             ins.ex_start = cpu.cycle
