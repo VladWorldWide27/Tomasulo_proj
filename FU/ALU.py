@@ -1,5 +1,5 @@
 from Isa import ParseError
-
+#Function definition for ALU operations
 
 def evaluate(ins):
     a = ins.vals[0]
@@ -10,6 +10,7 @@ def evaluate(ins):
         return int(a) + int(b)
     if ins.op == 'sub':
         return int(a) - int(b)
+    # Floating point operations
     if ins.op == 'add.d':
         return a + b
     if ins.op == 'sub.d':
@@ -18,6 +19,7 @@ def evaluate(ins):
         return int(a) * int(b)
     if ins.op == 'mult.d':
         return a * b
+    #Branches Prediction 
     if ins.op == 'beq':
         return a == b
     if ins.op == 'bne':

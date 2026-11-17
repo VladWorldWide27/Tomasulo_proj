@@ -1,5 +1,7 @@
 from Isa import INT, FPA, FPM, LSU
 
+#translate input file names to local commands
+
 UNIT_ALIAS = {
     'int_adder': INT, 'integer_adder': INT, 'integer adder': INT, 'int': INT,
     'fp_adder': FPA, 'fp adder': FPA, 'fpadd': FPA,
@@ -8,7 +10,7 @@ UNIT_ALIAS = {
     'load_store_unit': LSU, 'lsu': LSU, 'memory': LSU,
 }
 
-
+#params from the handout in a dict
 class Config:
     def __init__(self):
         self.rs = {INT: 2, FPA: 3, FPM: 2, LSU: 3}

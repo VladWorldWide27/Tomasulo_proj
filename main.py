@@ -7,8 +7,11 @@ import report
 
 
 def main(argv=None):
+    #parse command line arguments
     argv = list(sys.argv[1:] if argv is None else argv)
     trace = '--trace' in argv
+    #parse the input file
+
     paths = [a for a in argv if not a.startswith('--')]
     if not paths:
         print('usage: python main.py <input.txt> [--trace]')
@@ -22,11 +25,13 @@ def main(argv=None):
         print('no instructions found in %s' % paths[0])
         return 1
     try:
+        #create the CPU and run it
         cpu = CPU(cfg, prog, iregs, fregs, mem)
         cpu.run(on_cycle=report.print_stat if trace else None)
     except ParseError as err:
         print('runtime error: %s' % err)
         return 1
+    #print the results
     report.print_status_table(cpu, tsv='--tsv' in argv)
     report.print_results(cpu)
     return 0
