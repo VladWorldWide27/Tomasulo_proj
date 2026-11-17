@@ -18,28 +18,31 @@ class CPU:
         self.cfg = cfg
         self.prog = prog
         self.issued = []
-        self.history = []
+        self.history = [] #nothing is ever removed
         self.registers = RegisterFiles(iregs, fregs)
         self.memory = DataMemory(mem, cfg.mem_cycles)
         self.units = {
-            INT: IntegerAdder(cfg.fu[INT], cfg.ex[INT]),
-            FPA: FPAdder(cfg.fu[FPA], cfg.ex[FPA]),
-            FPM: FPMultiplier(cfg.fu[FPM], cfg.ex[FPM]),
-            LSU: AddressAdder(cfg.fu[LSU], cfg.ex[LSU]),
+            INT: IntegerAdder(cfg.fu[INT], cfg.ex[INT]), #unpipelined integer adder
+            FPA: FPAdder(cfg.fu[FPA], cfg.ex[FPA]),      #pipelined floating point adder
+            FPM: FPMultiplier(cfg.fu[FPM], cfg.ex[FPM]), #pipelined floating point multiplier
+            LSU: AddressAdder(cfg.fu[LSU], cfg.ex[LSU]), #unpipelined load/store address adder
         }
+        #bookkeeping
         self.stations = ReservationStations(cfg.rs)
         self.rob = ReorderBuffer(cfg.rob)
         self.rat = RegisterAliasTable()
         self.cdb = CommonDataBus(cfg.cdb_buffer)
         self.btb = BranchTargetBuffer()
-        self.next_issue = 0
-        self.resume_issue_at = 0
+        self.next_issue = 0 #fetch
+        self.resume_issue_at = 0 #issue blocker
         self.mispredicts = []
         self.cycle = 0
         self.stalls = {}
-        self.cdb_room = {}
+        self.cdb_room = {} #free CBD buffer slot
         self.cdb_stalls = set()
 
+    #clock cycle 
+    #order of operations is important
     def step(self):
         self.cycle += 1
         self.stations.tick()
@@ -52,7 +55,9 @@ class CPU:
         execute.run(self)
 
     def finished(self):
+        #check if all instructions have been issued and committed
         return self.next_issue >= len(self.prog) and all(i.commit for i in self.issued)
+
 
     def run(self, on_cycle=None, limit=100000):
         while self.cycle < limit:
